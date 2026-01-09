@@ -386,6 +386,23 @@ export default function MultiStreamViewer() {
             <li><strong>Kick:</strong> Enter the channel name</li>
           </ul>
         </div>
+
+        <div> 
+              <footer className="mt-6 text-center text-xs text-gray-500">
+                <p>&copy; 2026 StreamHub. All rights reserved.</p>
+                <p className="mt-2">
+                  <a 
+                    href="https://github.com/J-Bridge04/streamhub" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-gray-300 transition"
+                  >
+                    View on GitHub
+                  </a>
+                </p>
+              </footer>
+
+        </div>
       </div>
     </div>
   );
