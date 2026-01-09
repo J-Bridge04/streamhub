@@ -1,8 +1,8 @@
-# Multi-Stream Viewer
+# StreamHub
 
 A modern web application for watching multiple live streams simultaneously from Twitch, YouTube, and Kick. Heavily inspired by [teamstream.gg](https://teamstream.gg).
 
-![Multi-Stream Viewer](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=white)
+![StreamHub](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css&logoColor=white)
 
@@ -79,6 +79,14 @@ npm run dev
 - Enables enhanced features and personalized experience
 - Your session is saved in local storage
 
+<<<<<<< HEAD
+=======
+### Whats To Come
+- Youtube and Kick Sign in authorizations
+- Searchable Youtube and Kick streams
+- The ability to check if a user is banned on twitch/Kick/youtube for the purpose of streaming this site
+
+>>>>>>> 36f3ed3d5f5a3aa764c0f400a084b43026d2bc1e
 ## 🛠️ Built With
 
 - [React](https://react.dev/) - UI framework
