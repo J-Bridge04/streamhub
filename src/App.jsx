@@ -387,21 +387,20 @@ export default function MultiStreamViewer() {
           </ul>
         </div>
 
-        <div> 
-              <footer className="mt-6 text-center text-xs text-gray-500">
-                <p>&copy; 2026 StreamHub. All rights reserved.</p>
-                <p className="mt-2">
-                  <a 
-                    href="https://github.com/J-Bridge04/streamhub" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-gray-300 transition"
-                  >
-                    View on GitHub
-                  </a>
-                </p>
-              </footer>
-
+        <div className="mt-8 border-t border-gray-700 pt-6 text-center">
+          <footer className="text-sm text-gray-400">
+            <p>&copy; 2026 StreamHub. All rights reserved.</p>
+            <p className="mt-3">
+              <a 
+                href="https://github.com/J-Bridge04/streamhub" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 transition underline"
+              >
+                View on GitHub
+              </a>
+            </p>
+          </footer>
         </div>
       </div>
     </div>
