@@ -7,6 +7,8 @@ export default function MultiStreamViewer() {
   ]);
   const [layout, setLayout] = useState('grid');
   const [twitchToken, setTwitchToken] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [suggestions, setSuggestions] = useState({});
   const [activeSuggestions, setActiveSuggestions] = useState(null);
   const debounceTimers = useRef({});
@@ -39,6 +41,58 @@ export default function MultiStreamViewer() {
     };
 
     getTwitchToken();
+
+    // Check for OAuth callback
+    const handleOAuthCallback = async () => {
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      const token = params.get('access_token');
+      const scope = params.get('scope');
+
+      if (token && scope) {
+        // Store token and get user info
+        setUserToken(token);
+        localStorage.setItem('twitchUserToken', token);
+
+        // Get user info
+        try {
+          const response = await fetch('https://api.twitch.tv/helix/users', {
+            headers: {
+              'Client-ID': import.meta.env.VITE_TWITCH_CLIENT_ID,
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const user = data.data[0];
+            setUserData({
+              id: user.id,
+              login: user.login,
+              display_name: user.display_name,
+              profile_image_url: user.profile_image_url,
+            });
+            localStorage.setItem('twitchUserData', JSON.stringify(user));
+          }
+        } catch (error) {
+          console.error('Error getting user info:', error);
+        }
+
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        // Check localStorage for existing token
+        const savedToken = localStorage.getItem('twitchUserToken');
+        const savedUserData = localStorage.getItem('twitchUserData');
+        if (savedToken) {
+          setUserToken(savedToken);
+        }
+        if (savedUserData) {
+          setUserData(JSON.parse(savedUserData));
+        }
+      }
+    };
+
+    handleOAuthCallback();
   }, []);
 
   // Search for Twitch channels
@@ -92,6 +146,25 @@ export default function MultiStreamViewer() {
     setSuggestions(prev => ({ ...prev, [streamId]: [] }));
     setActiveSuggestions(null);
   };
+
+  // Twitch sign in
+  const handleTwitchSignIn = () => {
+    const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
+    const redirectUri = `${window.location.origin}${window.location.pathname}`;
+    const scope = 'user:read:email';
+
+    const authUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
+
+    window.location.href = authUrl;
+  };
+
+  // Logout
+  const handleLogout = () => {
+    setUserToken(null);
+    setUserData(null);
+    localStorage.removeItem('twitchUserToken');
+    localStorage.removeItem('twitchUserData');
+  };
     setStreams([...streams, { 
       id: Date.now(), 
       url: '', 
@@ -99,10 +172,11 @@ export default function MultiStreamViewer() {
       username: '' 
     }]);
   };
+
   const signIn = () => {
     // Placeholder for sign-in logic
     alert('Sign-in functionality is not implemented yet.');
-  }
+  };
 
   const removeStream = (id) => {
     setStreams(streams.filter(s => s.id !== id));
@@ -155,13 +229,30 @@ export default function MultiStreamViewer() {
               Add Stream
             </button>
 
-            <button
-              onClick={signIn}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition"
-            >
-              <Plus size={20}/>
-              Sign in
-            </button>
+            {userData ? (
+              <div className="flex items-center gap-3 bg-green-900 px-4 py-2 rounded-lg">
+                <img 
+                  src={userData.profile_image_url} 
+                  alt={userData.display_name}
+                  className="w-8 h-8 rounded-full"
+                />
+                <span className="text-sm font-medium">{userData.display_name}</span>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-400 hover:text-red-300"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleTwitchSignIn}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition"
+              >
+                <Plus size={20}/>
+                Sign in with Twitch
+              </button>
+            )}
           </div>
         </div>
  
@@ -269,4 +360,5 @@ export default function MultiStreamViewer() {
       </div>
     </div>
   );
-}
+};
+
