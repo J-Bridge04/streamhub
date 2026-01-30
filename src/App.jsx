@@ -238,30 +238,30 @@ export default function MultiStreamViewer() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 flex">
       <div className="w-full flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Multi-Stream Viewer</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Multi-Stream Viewer</h1>
           <div className="flex items-center gap-2">
             {userData ? (
-              <div className="flex items-center gap-3 bg-green-900 px-4 py-2 rounded-lg">
+              <div className="flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-lg">
                 <img 
                   src={userData.profile_image_url} 
                   alt={userData.display_name}
-                  className="w-8 h-8 rounded-full"
+                  className="w-6 h-6 rounded-full"
                 />
                 <span className="text-sm font-medium">{userData.display_name}</span>
                 <button
                   onClick={handleLogout}
                   className="text-red-400 hover:text-red-300"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
             ) : (
               <button
                 onClick={handleTwitchSignIn}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition"
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg transition"
               >
-                <Plus size={20}/>
+                <Plus size={18}/>
                 Sign in with Twitch
               </button>
             )}
@@ -336,10 +336,15 @@ export default function MultiStreamViewer() {
                 gridTemplateColumns: viewingStreamId ? '1fr' : `repeat(${getGridColumns()}, 1fr)`,
                 gridAutoRows: 'minmax(0, 1fr)'
               }}>
-              {(viewingStreamId ? streams.filter(s => s.id === viewingStreamId) : streams).map((stream) => {
+              {streams.map((stream) => {
                 const embedUrl = getEmbedUrl(stream);
+                const isHidden = viewingStreamId && stream.id !== viewingStreamId;
                 return (
-                  <div key={stream.id} className="bg-gray-800 rounded-lg overflow-hidden">
+                  <div 
+                    key={stream.id} 
+                    className="bg-gray-800 rounded-lg overflow-hidden"
+                    style={{ display: isHidden ? 'none' : 'block' }}
+                  >
                     {embedUrl ? (
                       <iframe
                         src={embedUrl}
